@@ -31,10 +31,6 @@ const contentSchema = mongoose.Schema(
         isImp: {
             type: String,
         },
-        accuracy: {
-            type: String,
-            required: true,
-        },
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",

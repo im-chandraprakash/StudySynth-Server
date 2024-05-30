@@ -65,6 +65,8 @@ exports.getAllBranches = async (req, res) => {
 
 exports.createSubject = async (req, res) => {
     try {
+
+        console.log(req.body);
         const { name, description, semesterName, branchName, key } = req.body;
 
         const image = req?.files?.image;

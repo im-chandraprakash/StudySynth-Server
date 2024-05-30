@@ -12,7 +12,7 @@ exports.requireUser = async (req, res, next) => {
         }
 
         const user = jwt.verify(token, process.env.ACCESS_TOKEN_SIGNATURE);
-        
+
         if (user) {
             req.user = user;
             next();
@@ -21,5 +21,16 @@ exports.requireUser = async (req, res, next) => {
         }
     } catch (error) {
         return res.send(Errors(500, error.message));
+    }
+};
+
+exports.requireAdmin = async (req, res, next) => {
+    try {
+        if (req.user.role !== "admin") {
+            return res.send(Errors(403, "Admin resource. Access denied."));
+        }
+        next();
+    } catch (e) {
+        return res.send(Errors(500, e.message));
     }
 };

@@ -4,6 +4,7 @@ const connect = require("./config/database.js");
 const morgan = require("morgan");
 const cors = require("cors");
 const { connectCloudinary } = require("./config/cloudinary.js");
+const contentRouter = require("./routers/ContentRouter.js");
 const authRouter = require("./routers/authRouter.js");
 const adminRoutes = require("./routers/adminRouter.js");
 const subjectRouter = require("./routers/SubjectBranchRouter.js");
@@ -35,6 +36,8 @@ connectCloudinary();
 app.use("/auth", authRouter);
 app.use("/admin", adminRoutes);
 app.use("/subject", subjectRouter);
+app.use("/content", contentRouter);
+
 app.use("/", (req, res) => {
     return res.status(200).send("ok from server");
 });

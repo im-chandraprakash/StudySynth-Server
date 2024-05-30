@@ -14,7 +14,6 @@ exports.createContent = async (req, res) => {
             subjectId,
             isImp,
             unitName,
-            accuracy,
         } = req.body;
 
         console.log("body : ", req.body);
@@ -24,8 +23,7 @@ exports.createContent = async (req, res) => {
             !content ||
             !contentType ||
             !subjectId ||
-            !unitName ||
-            !accuracy
+            !unitName
         ) {
             return res.send(Errors(400, "All fields Are required"));
         }
@@ -52,7 +50,6 @@ exports.createContent = async (req, res) => {
             yearOfRepeatition: yor,
             contentType: contentType,
             subjectId: subjectId,
-            accuracy: accuracy,
         });
 
         const updateObject = {};
@@ -86,6 +83,19 @@ exports.getSingleContent = async (req, res) => {
         const { contentId } = req.body;
         const content = await Content.findById(contentId);
         return res.send(Success(200, "Succesfully fetched", content));
+    } catch (error) {
+        return res.send(Errors(500, error.message));
+    }
+};
+
+exports.getRecentArticles = async (req, res) => {
+    try {
+        let recentArticles = await Content.find();
+        recentArticles = recentArticles.reverse();
+
+        return res.send(
+            Success(200, "Data Fetched Successfully", recentArticles)
+        );
     } catch (error) {
         return res.send(Errors(500, error.message));
     }

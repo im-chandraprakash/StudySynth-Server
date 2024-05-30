@@ -100,6 +100,7 @@ const loginController = async (req, res) => {
         if (await bcrypt.compare(password, user.password)) {
             const options = {
                 _id: user._id,
+                role: user.role
             };
 
             // create access token
@@ -127,7 +128,6 @@ const loginController = async (req, res) => {
             return res.send(
                 Success(200, "User Logged in successfully", accessToken)
             );
-            // create refresh token
         }
     } catch (e) {
         return res.send(Errors(500, e.message));
@@ -185,9 +185,36 @@ const signupController = async (req, res) => {
     }
 };
 
+const registerAdmin = async (req, res) => {
+    const { firstName, lastName, email, password } = req.body;
+
+    try {
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ msg: "User already exists" });
+        }
+
+        user = new User({
+            firstName,
+            lastName,
+            email,
+            password,
+            role: "admin",
+        });
+
+        user.password = await bcrypt.hash(password, 10);
+        await user.save();
+
+        return res.send(Success(200, "Admin registered successfully"));
+    } catch (e) {
+        return res.send(Errors(500, e.message));
+    }
+};
+
 module.exports = {
     generateOTP,
     loginController,
     signupController,
     resetPassword,
+    registerAdmin,
 };
